@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndexedDB Examples</title>
+</head>
+<body>
+  <h1>IndexedDB Examples</h1>
+
+  <button onclick="createDatabase()">Create Database</button>
+  <button onclick="addData()">Add Data</button>
+  <button onclick="queryData()">Query Data</button>
+  <button onclick="deleteData()">Delete Data</button>
+
+  <script>
+    function createDatabase() {
+      let request = indexedDB.open('myDatabase', 1);
+
+      request.onupgradeneeded = function(event) {
+        let db = event.target.result;
+        
+        let objectStore = db.createObjectStore('books', { keyPath: 'isbn' });
+        objectStore.createIndex('title', 'title', { unique: false });
+        objectStore.createIndex('author', 'author', { unique: false });
+      };
+
+      request.onsuccess = function(event) {
+        console.log('Database created successfully');
+        event.target.result.close();
+      };
+
+      request.onerror = function(event) {
+        console.error('Error creating database:', event.target.errorCode);
+      };
+    }
+
+    function addData() {
+      let request = indexedDB.open('myDatabase', 1);
+
+      request.onsuccess = function(event) {
+        let db = event.target.result;
+        
+        let transaction = db.transaction(['books'], 'readwrite');
+        let objectStore = transaction.objectStore('books');
+        
+        objectStore.add({ isbn: '123456', title: 'Sample Book', author: 'John Doe' });
+
+        transaction.oncomplete = function() {
+          console.log('Data added successfully');
+          db.close();
+        };
+
+        transaction.onerror = function(event) {
+          console.error('Error adding data:', event.target.errorCode);
+        };
+      };
+
+      request.onerror = function(event) {
+        console.error('Error opening database:', event.target.errorCode);
+      };
+    }
+
+    function queryData() {
+      let request = indexedDB.open('myDatabase', 1);
+
+      request.onsuccess = function(event) {
+        let db = event.target.result;
+        
+        let transaction = db.transaction(['books'], 'readonly');
+        let objectStore = transaction.objectStore('books');
+        let index = objectStore.index('author');
+        
+        let authorQuery = index.getAll('John Doe');
+        
+        authorQuery.onsuccess = function() {
+          console.log('Books by John Doe:', authorQuery.result);
+          db.close();
+        };
+
+        transaction.onerror = function(event) {
+          console.error('Error querying data:', event.target.errorCode);
+        };
+      };
+
+      request.onerror = function(event) {
+        console.error('Error opening database:', event.target.errorCode);
+      };
+    }
+
+    function deleteData() {
+      let request = indexedDB.open('myDatabase', 1);
+
+      request.onsuccess = function(event) {
+        let db = event.target.result;
+        
+        let transaction = db.transaction(['books'], 'readwrite');
+        let objectStore = transaction.objectStore('books');
+        
+        let deleteRequest = objectStore.delete('123456');
+        
+        deleteRequest.onsuccess = function() {
+          console.log('Book deleted successfully');
+          db.close();
+        };
+
+        deleteRequest.onerror = function(event) {
+          console.error('Error deleting data:', event.target.errorCode);
+        };
+      };
+
+      request.onerror = function(event) {
+        console.error('Error opening database:', event.target.errorCode);
+      };
+    }
+  </script>
+</body>
+</html>

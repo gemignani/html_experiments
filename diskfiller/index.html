@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage Example</title>
+    <script src="./disk.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* White background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* 100% of the viewport height */
+        }
+
+        .centered-content {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="centered-content">
+        <h1>LocalStorage Example</h1>
+        <p id="loaded">DOMContentLoaded LOADING...</p>
+        <!-- <p>Press the "1" key to create 1MB of random ASCII chars in UTF-16 thus setting 2MB to LocalStorage (exampleData).</p> -->
+        <p>Press the "1" key to removeItem exampleData.</p>
+        <p>Press the "2" key to removeItem exampleData2.</p>
+        <!-- <p>Press the "2" key to create 2MB of random ASCII chars in UTF-16 thus setting 4MB to LocalStorage (exampleData).</p> -->
+        <!-- <p>Press the "3" key to create 3MB of random ASCII chars in UTF-16 thus setting 6MB to LocalStorage (exampleData).</p> -->
+
+        <p>Press the "4" key to to slowly fill (exampleData).</p>
+
+        <p>Press the "5" key to create 512KB of random ASCII chars in UTF-16 thus setting 1MB to LocalStorage (exampleData).</p>
+        <p>Press the "6" key to create 256KB of random ASCII chars in UTF-16 thus setting 512KB to LocalStorage (exampleData).</p>
+
+        <p>Press the "7" key to create 128KB of random  ASCII chars in UTF-16 thus setting 256KB to LocalStorage (exampleData).</p>
+        <p> </p>
+        <p>Press the "8" key to create 128KB of random ASCII chars in UTF-16 thus setting 256KB to LocalStorage (exampleData2).</p>
+        <p>Press the "9" key to create 64KB of random ASCII chars in UTF-16 thus setting 128KB to LocalStoragee (exampleData2).</p>
+        <p> </p>
+        <p>Press the "0" key to refresh Current LocalStorage.</p>
+        <p>Press the "BACK" key to window.close().</p>
+        <p id="storageSize">Current LocalStorage exampleData Size: <span id="size">UN_INIT</span></p>
+        <p id="storageSize2">Current LocalStorage exampleData2 Size: <span id="size2">UN_INIT</span></p>
+        <p>MSG: <span id="result">EMPTY</span></p>
+    </div>
+</body>
+</html>

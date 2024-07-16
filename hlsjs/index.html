@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Hls.js demo - basic usage</title>
+  </head>
+
+  <body>
+    <script src="hls.js"></script>
+
+    <center>
+      <h1>Hls.js demo - basic usage</h1>
+      <video height="600" id="video" controls></video>
+    </center>
+
+    <script>
+      console.log("DOUG START")
+
+      var video = document.getElementById('video');
+      if (Hls.isSupported()) {
+        console.log("DOUG ok")
+        var hls = new Hls({
+        //   debug: true,
+        });
+        hls.loadSource('https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          video.muted = true;
+          video.play();
+        });
+      }
+      console.log("DOUG END")
+
+      document.addEventListener('keydown', (event) => {
+        const keyName = event.key;
+        const keyCode = event.keyCode;
+        console.log("event ", event);
+        console.log("keyName " + keyName, "keyCode", keyCode);
+      });
+
+    </script>
+  </body>
+</html>

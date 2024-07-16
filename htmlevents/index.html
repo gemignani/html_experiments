@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Listener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #event-details {
+      color: white;
+      max-width: 80%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="event-details"></div>
+
+<script>
+
+// // Function to dispatch events
+// function dispatchEvent(eventName) {
+//   console.log('Dispatched event:', eventName);
+//   var event = new Event(eventName);
+//   event.synthetic = true; // Mark the event as synthetic
+//   window.dispatchEvent(event);
+// }
+
+function handleDefaultWindowEvent(event) {
+  // Suppress the default behavior of the window blur event
+  console.log(`${formatTimestamp()} Default Window Event: ${event.type}`);
+  event.preventDefault();
+  console.log(event)
+  if (event.isTrusted)
+    event.stopImmediatePropagation();
+
+}
+
+window.addEventListener('blur', handleDefaultWindowEvent);
+window.addEventListener('focus', handleDefaultWindowEvent);
+
+
+function blur() {
+  window.dispatchEvent(new Event('blur'));
+}
+function focus() {
+  window.dispatchEvent(new Event('focus'));
+}
+
+// Event listener for key presses
+document.addEventListener('keydown', function(event) {
+  console.log('Key pressed:', event.key);
+  // switch(event.key) {
+  //   case '1':
+  //     console.log('Dispatching blur event');
+  //     dispatchEvent('blur');
+  //     break;
+  //   case '2':
+  //     console.log('Dispatching focus event');
+  //     dispatchEvent('focus');
+  //     break;
+  //   case '3':
+  //     console.log('Dispatching pagehide event');
+  //     dispatchEvent('pagehide');
+  //     break;
+  //   case '4':
+  //     console.log('Dispatching visibilitychange event');
+  //     dispatchEvent('visibilitychange');
+  //     break;
+  //   default:
+  //     break;
+  // }
+});
+
+
+// Function to update event details on screen
+function updateEventDetails(details) {
+  const eventDetailsElement = document.getElementById('event-details');
+  eventDetailsElement.innerHTML += '<br>' + details;
+}
+
+// Function to format timestamp
+function formatTimestamp() {
+  const now = new Date();
+  const timestamp = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}`;
+  return `[${timestamp}]`;
+}
+
+
+  // let properties = '';
+  // for (const prop in event) {
+  //       properties += `${prop}: ${event[prop]} `;
+  //  } 
+
+// Event listener function for window events
+function handleWindowEvent(event) {
+
+  if (event.type === 'visibilitychange') {
+    console.log(`${formatTimestamp()} Window Event: ${event.type} state (${ window.visibilityState })`);
+    const details = `${formatTimestamp()} Window Event: ${event.type} state (${ window.visibilityState })`;
+    updateEventDetails(details);
+  } else {
+    console.log(`${formatTimestamp()} Window Event: ${event.type}`);
+    const details = `${formatTimestamp()} Window Event: ${event.type}`;
+    updateEventDetails(details);
+  }
+}
+
+// Event listener function for document events
+function handleDocumentEvent(event) {
+
+  if (event.type === 'visibilitychange') {
+    console.log(`${formatTimestamp()} Document Event: ${event.type} state (${ document.visibilityState })`);
+    const details = `${formatTimestamp()} Document Event: ${event.type} state (${ document.visibilityState })`;
+    updateEventDetails(details);
+  } else {
+    console.log(`${formatTimestamp()} Document Event: ${event.type}`);
+    const details = `${formatTimestamp()} Document Event: ${event.type}`;
+    updateEventDetails(details);
+  }
+}
+
+
+// Add event listeners for window events
+window.addEventListener('blur', handleWindowEvent);
+window.addEventListener('focus', handleWindowEvent);
+window.addEventListener('pagehide', handleWindowEvent);
+window.addEventListener('visibilitychange', handleWindowEvent);
+
+// Add event listeners for document events
+document.addEventListener('blur', handleDocumentEvent);
+document.addEventListener('focus', handleDocumentEvent);
+document.addEventListener('pagehide', handleDocumentEvent);
+document.addEventListener('visibilitychange', handleDocumentEvent);
+
+// Logging initial visibility state
+console.log('Initial visibility state:', document.visibilityState);
+
+
+</script>
+
+</body>
+</html>

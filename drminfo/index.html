@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DRM Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* White background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* 100% of the viewport height */
+        }
+        table, th, td { border: 1px solid; border-collapse: collapse; }
+        th, td { padding: 4px; }
+        .centered-content {
+            text-align: center;
+        }
+        .scroll-container {
+            height: 90vh; /* Set the container height to 90% of the viewport height */
+            overflow: auto;
+            border: 1px solid #ccc; /* Add a border for visibility */
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="scroll-container" tabindex="0">
+    <table id="resultsTable">
+        <thead><tr><th></th><th>Name</th><th>Key System</th><th>Encryption Scheme</th><th>Video Robustness</th><th>Audio Robustness</th><th>InitDataType</th></tr></thead>
+        <tbody></tbody>
+    </table>
+
+    <p>WebKit-EME (Safari/FairPlay "legacy" EME)</p>
+    <ul id="webKitEmeKeySystemProbeResults"></ul>
+
+</div>
+<script type="text/javascript">
+
+let testPassedIconString = String.fromCodePoint(0x2705);
+let testFailedIconString = String.fromCodePoint(0x274C);
+
+
+let defaultVideoContentType = 'video/mp4; codecs="avc1.64001F"'; // Adjust to probe support for another video format.
+let defaultAudioContentType = 'audio/mp4; codecs="mp4a.40.2"'; // Adjust to probe support for another audio format.
+
+let keySystem = {
+	clearKey: "org.w3.clearkey",												// A "testing" DRM system. Not secure.
+	fairPlay: "com.apple.fps",													// New FairPlay key system for use with standard EME in modern Safari.
+	fairPlay1: "com.apple.fps.1_0",												// Old, but still widely used FairPlay key system for use with the WebKit-prefixed EME APIs.
+	fairPlay2: "com.apple.fps.2_0",												// Not documented. Possibly used by select Apple partners.
+	fairPlay3: "com.apple.fps.3_0",												// Not documented. Possibly used by select Apple partners.
+	playReadyRecommendation: "com.microsoft.playready.recommendation",			// Modern PlayReady key system. Recommended by Microsoft for software DRM (though also HW DRM can be obtained by setting the robustnesses appropriately).
+	playReadyRecommendation2000: "com.microsoft.playready.recommendation.2000", // Modern PlayReady key system for software DRM only.
+	playReadyRecommendation3000: "com.microsoft.playready.recommendation.3000", // Modern PlayReady key system for hardware DRM only -- Microsoft recommends to use for Hardware DRM.
+	playReadyLegacyHardware: "com.microsoft.playready.hardware",				// "Legacy" PlayReady key system for hardware DRM (but de-facto probably widely used).
+	playReadyLegacy: "com.microsoft.playready",									// "Legacy" PlayReady key system (but de-facto probably widely used). Defaults to software DRM. Robustness settings may not work.
+	widevine: "com.widevine.alpha"												// The standard Widevine key system. Defaults to L3, if available. Use robustness settings to get L1 (HW DRM).
+}
+
+let initDataType = {
+	cenc: "cenc",	// PSSHs are used for init data. Most common, except FairPlay doesn't use it.
+	sinf: "sinf",	// For FairPlay/Safari with Modern EME -- DRM metadata is read from media "sinf" block.
+	skd: "skd"		// For FairPlay/Safari with Modern EME and HLS -- DRM metadata is read from HLS manifest URI attributes of EXT-X-(SESSION-)KEY tags.
+}
+
+let encryptionScheme = {
+	cenc: "cenc", 	// Historically the most standard and recommended encryption scheme. However, FairPlay (Apple) doesn't support it.
+	cbcs: "cbcs" 	// The most universally usable encryption scheme (in theory). However, PlayReady doesn't widely support it.
+}
+
+let widevineRobustnessLevel = {
+	swSecureCrypto: "SW_SECURE_CRYPTO", // L3 (software DRM) (default)
+	swSecureDecode: "SW_SECURE_DECODE", // L3
+	hwSecureCrypto: "HW_SECURE_CRYPTO", // L2
+	hwSecureDecode: "HW_SECURE_DECODE", // L1 (hardware DRM)
+	hwSecureAll: "HW_SECURE_ALL" 		// L1
+};
+
+let playReadyRobustnessLevel = {
+	testing: "150", 	// Software DRM (testing only)
+	software: "2000", 	// Software DRM (default)
+	hardware: "3000",	// Hardware DRM
+};
+
+
+let testCasesWV = [
+    { name: "Clear Key", keySystem: keySystem.clearKey, configuration: GetConfigurationSet(initDataType.cenc) },
+    { name: "FairPlay (sinf)", keySystem: keySystem.fairPlay, configuration: GetConfigurationSet(initDataType.sinf) },
+    { name: "FairPlay (skd)", keySystem: keySystem.fairPlay, configuration: GetConfigurationSet(initDataType.skd) },
+    { name: "Widevine L3 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.swSecureCrypto, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L3 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.swSecureCrypto, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L3 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.swSecureDecode, widevineRobustnessLevel.swSecureDecode, encryptionScheme.cenc) },
+    { name: "Widevine L3 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.swSecureDecode, widevineRobustnessLevel.swSecureDecode, encryptionScheme.cbcs) },
+    { name: "Widevine L2 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureCrypto, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L2 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureCrypto, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.swSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureCrypto, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureCrypto, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureDecode, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureDecode, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureDecode, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureDecode, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureAll, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureDecode, widevineRobustnessLevel.hwSecureAll, encryptionScheme.cbcs) },
+    { name: "Widevine L1 (cenc)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureAll, encryptionScheme.cenc) },
+    { name: "Widevine L1 (cbcs)", keySystem: keySystem.widevine, configuration: GetConfigurationSet(initDataType.cenc, widevineRobustnessLevel.hwSecureAll, widevineRobustnessLevel.hwSecureAll, encryptionScheme.cbcs) },
+];
+
+let testCasesPR = [
+    { name: "Clear Key", keySystem: keySystem.clearKey, configuration: GetConfigurationSet(initDataType.cenc) },
+    { name: "FairPlay (sinf)", keySystem: keySystem.fairPlay, configuration: GetConfigurationSet(initDataType.sinf) },
+    { name: "FairPlay (skd)", keySystem: keySystem.fairPlay, configuration: GetConfigurationSet(initDataType.skd) },
+    { name: "FairPlay (cenc)", keySystem: keySystem.fairPlay, configuration: GetConfigurationSet(initDataType.cenc) },
+    { name: "PlayReady SW DRM (cenc)", keySystem: keySystem.playReadyRecommendation, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cenc) },
+    { name: "PlayReady SW DRM (cbcs)", keySystem: keySystem.playReadyRecommendation, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cbcs) },
+    { name: "PlayReady SW DRM (legacy, cenc)", keySystem: keySystem.playReadyLegacy, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cenc) },
+    { name: "PlayReady SW DRM (legacy, cbcs)", keySystem: keySystem.playReadyLegacy, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cbcs) },
+    { name: "PlayReady HW DRM (cenc)", keySystem: keySystem.playReadyRecommendation3000, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cenc) },
+    { name: "PlayReady HW DRM (cbcs)", keySystem: keySystem.playReadyRecommendation3000, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cbcs) },
+    { name: "PlayReady HW DRM (legacy, cenc)", keySystem: keySystem.playReadyLegacyHardware, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cenc) },
+    { name: "PlayReady HW DRM (legacy, cbcs)", keySystem: keySystem.playReadyLegacyHardware, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cbcs) },
+    { name: "PlayReady HW DRM (cenc)", keySystem: keySystem.playReadyRecommendation, configuration: GetConfigurationSet(initDataType.cenc, playReadyRobustnessLevel.hardware, null, encryptionScheme.cenc) },
+    { name: "PlayReady HW DRM (cbcs)", keySystem: keySystem.playReadyRecommendation, configuration: GetConfigurationSet(initDataType.cenc, playReadyRobustnessLevel.hardware, null, encryptionScheme.cbcs) },
+    { name: "PlayReady HW DRM* (legacy, cenc)", keySystem: keySystem.playReadyLegacy, configuration: GetConfigurationSet(initDataType.cenc, playReadyRobustnessLevel.hardware, null, encryptionScheme.cenc) },
+    { name: "PlayReady HW DRM* (legacy, cbcs)", keySystem: keySystem.playReadyLegacy, configuration: GetConfigurationSet(initDataType.cenc, playReadyRobustnessLevel.hardware, null, encryptionScheme.cbcs) },
+    { name: "PlayReady HW DRM (legacy, cenc)", keySystem: keySystem.playReadyLegacyHardware, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cenc) },
+    { name: "PlayReady HW DRM (legacy, cbcs)", keySystem: keySystem.playReadyLegacyHardware, configuration: GetConfigurationSet(initDataType.cenc, null, null, encryptionScheme.cbcs) }
+];
+
+let resultsTableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+
+function clearTable(tableBody) {
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+}
+
+function AddResultToTable(isSuccess, testCase, tableBody) {
+
+	let newRow = tableBody.insertRow();
+
+	let newCell = newRow.insertCell();
+	newCell.innerHTML = isSuccess ? testPassedIconString : testFailedIconString;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.name;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.keySystem;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.configuration[0].videoCapabilities[0].encryptionScheme;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.configuration[0].videoCapabilities[0].robustness;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.configuration[0].audioCapabilities[0].robustness;
+	newCell = newRow.insertCell();
+	newCell.innerHTML = testCase.configuration[0].initDataTypes[0];
+}
+
+// Helper for generating configuration sets.
+function GetConfigurationSet(initDataType, videoRobustness, audioRobustness, encryptionScheme) {
+	let configSet = [{ 
+		initDataTypes: [ initDataType ],
+		videoCapabilities: [{ contentType: defaultVideoContentType }],
+		audioCapabilities: [{ contentType: defaultAudioContentType }] 
+	}];
+	
+	if (videoRobustness != null)
+		configSet[0].videoCapabilities[0].robustness = videoRobustness;
+		
+	if (audioRobustness != null)
+		configSet[0].audioCapabilities[0].robustness = audioRobustness;
+		
+	if (encryptionScheme != null) {
+		configSet[0].videoCapabilities[0].encryptionScheme = encryptionScheme;
+		configSet[0].audioCapabilities[0].encryptionScheme = encryptionScheme;	
+	}
+	
+	return configSet;
+}
+
+// The main method that performs the tests and reports the results.
+async function DoSimpleTests() {
+	// EME tests.
+    clearTable(resultsTableBody);
+    
+	for (let i = 0; i < testCasesWV.length; ++i) {
+		let testResult = false;
+		
+		try {
+			await navigator.requestMediaKeySystemAccess(testCasesWV[i].keySystem, testCasesWV[i].configuration);
+			testResult = true;
+		} catch (e) {
+			console.log("Error" + e);
+		}
+
+		AddResultToTable(testResult, testCasesWV[i], resultsTableBody)
+	}
+
+}
+
+async function DoWebkitTests() {
+
+    // WebKit-EME tests.
+	ProbeWebkitEmeSupport(keySystem.fairPlay)
+	ProbeWebkitEmeSupport(keySystem.fairPlay1)
+	ProbeWebkitEmeSupport(keySystem.fairPlay2)
+	ProbeWebkitEmeSupport(keySystem.fairPlay3)
+}
+
+
+async function DoAdvancedTests() {
+    clearTable(resultsTableBody);
+
+	for (let i = 0; i < testCasesPR.length; ++i) {
+		let testResult = false;
+		
+		try {
+			await navigator.requestMediaKeySystemAccess(testCasesPR[i].keySystem, testCasesPR[i].configuration);
+			testResult = true;
+		} catch (e) {
+			console.log("Error" + e);
+		}
+
+		AddResultToTable(testResult, testCasesPR[i], resultsTableBody)
+	}
+	
+	document.getElementById('advancedResults').style.display = "block";
+}
+
+// Probe support via WebKit-prefixed-EME (FairPlay only; the original way to work with it).
+function ProbeWebkitEmeSupport (keySystem) {
+	let resultList = document.getElementById('webKitEmeKeySystemProbeResults');
+	let newEntry = document.createElement('li');
+	let newEntryText = keySystem + " ";
+
+	if (typeof WebKitMediaKeys === "function" && WebKitMediaKeys.isTypeSupported(keySystem, "video/mp4")) {
+		newEntryText += testPassedIconString;
+	}
+	else {
+		newEntryText += testFailedIconString;
+	}
+
+	newEntry.textContent = newEntryText;
+	resultList.appendChild(newEntry);
+}
+
+window.addEventListener('load', DoSimpleTests, {once: true});
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOMContentLoaded LOADED");
+    DoSimpleTests();
+    
+});
+const scrollContainer = document.querySelector('.scroll-container');
+
+document.addEventListener("keyup", function(event) {
+    console.log("Got " + event.keyCode);
+    if (event.keyCode === 38) { // Up arrow key
+            scrollContainer.scrollTop -= 20; // Adjust the value as needed
+    }
+    if (event.keyCode === 40) { // Down arrow key
+            scrollContainer.scrollTop += 20; // Adjust the value as needed
+    }
+
+    if (event.keyCode === 49) { //1
+        DoSimpleTests();
+    }
+    if (event.keyCode === 50) { //2
+        DoAdvancedTests();
+    }
+    if (event.keyCode === 51) { //3
+        DoWebkitTests();
+    }
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teST Page</title>
+  <script>
+    // Function to read and display cookies
+    function displayCookies() {
+      const cookies = document.cookie;
+      document.getElementById('cookies').textContent = cookies;
+    }
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        window.location.href = '/';
+      }
+    });
+    // Display cookies on page load
+    window.onload = displayCookies;
+  </script>
+</head>
+<body>
+  <h1>test Page</h1>
+  <p>Press Escape to go back to Index.</p>
+  <p><strong>Cookies:</strong></p>
+  <pre id="cookies"></pre>
+</body>
+</html>

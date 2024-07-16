@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Storage Test</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Oswald&family=Raleway&family=Merriweather&family=Ubuntu&family=Dancing+Script&family=Pacifico&family=Nunito&family=Poppins&family=Roboto+Condensed&family=Roboto+Slab&family=Playfair+Display&family=Inconsolata&family=PT+Sans&family=Fira+Sans&family=Rubik&family=Slabo+27px&family=Zilla+Slab&family=Source+Sans+Pro&family=Acme&family=Alegreya&family=Amatic+SC&family=Archivo+Narrow&family=Bebas+Neue&family=Cabin&family=Comfortaa&family=Courgette&family=Crimson+Text&family=Domine&family=EB+Garamond&family=Fjalla+One&family=Great+Vibes&family=Indie+Flower&family=Josefin+Sans&family=Karla&family=Libre+Baskerville&family=Lobster&family=Mukta&family=Noto+Serif&family=Old+Standard+TT&family=Oxygen&family=Play&family=Quicksand&family=Righteous&family=Roboto+Mono&family=Spectral&family=Teko&family=Titillium+Web&family=Ubuntu+Mono&family=Vollkorn&family=Work+Sans&family=Yeseva+One&family=Zeyada&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alice&family=Alike&family=Amarante&family=Arvo&family=Arya&family=Aubrey&family=Baloo&family=Bitter&family=Cabin+Sketch&family=Cantata+One&family=Cormorant+Garamond&family=Dosis&family=Economica&family=Exo&family=Fanwood+Text&family=Fredericka+the+Great&family=Grand+Hotel&family=Italiana&family=Julius+Sans+One&family=Kaushan+Script&family=Lobster+Two&family=Marck+Script&family=Megrim&family=Merriweather+Sans&family=Milonga&family=Monoton&family=Neucha&family=Neuton&family=Nixie+One&family=Orbitron&family=Overlock&family=Patrick+Hand&family=Philosopher&family=Pragati+Narrow&family=Press+Start+2P&family=Ramabhadra&family=Ravi+Prakash&family=Reenie+Beanie&family=Roboto+Flex&family=Russo+One&family=Satisfy&family=Secular+One&family=Shadows+Into+Light&family=Signika&family=Spinnaker&family=Syncopate&family=Tangerine&family=Tillana&family=Tinos&family=Unica+One&family=Varela+Round&family=Viga&family=Yatra+One&family=Zilla+Slab+Highlight&display=swap">
+    <style>
+        body {
+            background: #fff;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .font-sample {
+            margin-bottom: 10px;
+        }
+        .roboto { font-family: 'Roboto', sans-serif; }
+        .open-sans { font-family: 'Open Sans', sans-serif; }
+        .lato { font-family: 'Lato', sans-serif; }
+        .montserrat { font-family: 'Montserrat', sans-serif; }
+        .oswald { font-family: 'Oswald', sans-serif; }
+        .raleway { font-family: 'Raleway', sans-serif; }
+        .merriweather { font-family: 'Merriweather', serif; }
+        .ubuntu { font-family: 'Ubuntu', sans-serif; }
+        .dancing-script { font-family: 'Dancing Script', cursive; }
+        .pacifico { font-family: 'Pacifico', cursive; }
+        .nunito { font-family: 'Nunito', sans-serif; }
+        .poppins { font-family: 'Poppins', sans-serif; }
+        .roboto-condensed { font-family: 'Roboto Condensed', sans-serif; }
+        .roboto-slab { font-family: 'Roboto Slab', serif; }
+        .playfair-display { font-family: 'Playfair Display', serif; }
+        .inconsolata { font-family: 'Inconsolata', monospace; }
+        .pt-sans { font-family: 'PT Sans', sans-serif; }
+        .fira-sans { font-family: 'Fira Sans', sans-serif; }
+        .rubik { font-family: 'Rubik', sans-serif; }
+        .slabo { font-family: 'Slabo 27px', serif; }
+        .zilla-slab { font-family: 'Zilla Slab', serif; }
+        .source-sans-pro { font-family: 'Source Sans Pro', sans-serif; }
+        .acme { font-family: 'Acme', sans-serif; }
+        .alegreya { font-family: 'Alegreya', serif; }
+        .amatic-sc { font-family: 'Amatic SC', cursive; }
+        .archivo-narrow { font-family: 'Archivo Narrow', sans-serif; }
+        .bebas-neue { font-family: 'Bebas Neue', cursive; }
+        .cabin { font-family: 'Cabin', sans-serif; }
+        .comfortaa { font-family: 'Comfortaa', cursive; }
+        .courgette { font-family: 'Courgette', cursive; }
+        .crimson-text { font-family: 'Crimson Text', serif; }
+        .domine { font-family: 'Domine', serif; }
+        .eb-garamond { font-family: 'EB Garamond', serif; }
+        .fjalla-one { font-family: 'Fjalla One', sans-serif; }
+        .great-vibes { font-family: 'Great Vibes', cursive; }
+        .indie-flower { font-family: 'Indie Flower', cursive; }
+        .josefin-sans { font-family: 'Josefin Sans', sans-serif; }
+        .karla { font-family: 'Karla', sans-serif; }
+        .libre-baskerville { font-family: 'Libre Baskerville', serif; }
+        .lobster { font-family: 'Lobster', cursive; }
+        .mukta { font-family: 'Mukta', sans-serif; }
+        .noto-serif { font-family: 'Noto Serif', serif; }
+        .old-standard-tt { font-family: 'Old Standard TT', serif; }
+        .oxygen { font-family: 'Oxygen', sans-serif; }
+        .play { font-family: 'Play', sans-serif; }
+        .quicksand { font-family: 'Quicksand', sans-serif; }
+        .righteous { font-family: 'Righteous', cursive; }
+        .roboto-mono { font-family: 'Roboto Mono', monospace; }
+        .spectral { font-family: 'Spectral', serif; }
+        .teko { font-family: 'Teko', sans-serif; }
+        .titillium-web { font-family: 'Titillium Web', sans-serif; }
+        .ubuntu-mono { font-family: 'Ubuntu Mono', monospace; }
+        .vollkorn { font-family: 'Vollkorn', serif; }
+        .work-sans { font-family: 'Work Sans', sans-serif; }
+        .yeseva-one { font-family: 'Yeseva One', serif; }
+        .zeyada { font-family: 'Zeyada', cursive; }
+        .alice { font-family: 'Alice', serif; }
+        .alike { font-family: 'Alike', serif; }
+        .amarante { font-family: 'Amarante', cursive; }
+        .arvo { font-family: 'Arvo', serif; }
+        .arya { font-family: 'Arya', sans-serif; }
+        .aubrey { font-family: 'Aubrey', serif; }
+        .baloo { font-family: 'Baloo', cursive; }
+        .bitter { font-family: 'Bitter', serif; }
+        .cabin-sketch { font-family: 'Cabin Sketch', cursive; }
+        .cantata-one { font-family: 'Cantata One', serif; }
+        .cormorant-garamond { font-family: 'Cormorant Garamond', serif; }
+        .dosis { font-family: 'Dosis', sans-serif; }
+        .economica { font-family: 'Economica', sans-serif; }
+        .exo { font-family: 'Exo', sans-serif; }
+        .fanwood-text { font-family: 'Fanwood Text', serif; }
+        .fredericka-the-great { font-family: 'Fredericka the Great', cursive; }
+        .grand-hotel { font-family: 'Grand Hotel', cursive; }
+        .italiana { font-family: 'Italiana', serif; }
+        .julius-sans-one { font-family: 'Julius Sans One', sans-serif; }
+        .kaushan-script { font-family: 'Kaushan Script', cursive; }
+        .lobster-two { font-family: 'Lobster Two', cursive; }
+        .marck-script { font-family: 'Marck Script', cursive; }
+        .megrim { font-family: 'Megrim', sans-serif; }
+        .merriweather-sans { font-family: 'Merriweather Sans', sans-serif; }
+        .milonga { font-family: 'Milonga', cursive; }
+        .monoton { font-family: 'Monoton', cursive; }
+        .neucha { font-family: 'Neucha', cursive; }
+        .neuton { font-family: 'Neuton', serif; }
+        .nixie-one { font-family: 'Nixie One', sans-serif; }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .overlock { font-family: 'Overlock', cursive; }
+        .patrick-hand { font-family: 'Patrick Hand', cursive; }
+        .philosopher { font-family: 'Philosopher', sans-serif; }
+        .pragati-narrow { font-family: 'Pragati Narrow', sans-serif; }
+        .press-start-2p { font-family: 'Press Start 2P', cursive; }
+        .ramabhadra { font-family: 'Ramabhadra', sans-serif; }
+        .ravi-prakash { font-family: 'Ravi Prakash', cursive; }
+        .reenie-beanie { font-family: 'Reenie Beanie', cursive; }
+        .roboto-flex { font-family: 'Roboto Flex', sans-serif; }
+        .russo-one { font-family: 'Russo One', sans-serif; }
+        .satisfy { font-family: 'Satisfy', cursive; }
+        .secular-one { font-family: 'Secular One', sans-serif; }
+        .shadows-into-light { font-family: 'Shadows Into Light', cursive; }
+        .signika { font-family: 'Signika', sans-serif; }
+        .spinnaker { font-family: 'Spinnaker', sans-serif; }
+        .syncopate { font-family: 'Syncopate', sans-serif; }
+        .tangerine { font-family: 'Tangerine', cursive; }
+        .tillana { font-family: 'Tillana', cursive; }
+        .tinos { font-family: 'Tinos', serif; }
+        .unica-one { font-family: 'Unica One', sans-serif; }
+        .varela-round { font-family: 'Varela Round', sans-serif; }
+        .viga { font-family: 'Viga', sans-serif; }
+        .yatra-one { font-family: 'Yatra One', sans-serif; }
+        .zilla-slab-highlight { font-family: 'Zilla Slab Highlight', cursive; }
+    </style>
+</head>
+<body>
+    <h1>Font Storage Test</h1>
+    <p class="font-sample roboto">This is a sample text in Roboto.</p>
+    <p class="font-sample open-sans">This is a sample text in Open Sans.</p>
+    <p class="font-sample lato">This is a sample text in Lato.</p>
+    <p class="font-sample montserrat">This is a sample text in Montserrat.</p>
+    <p class="font-sample oswald">This is a sample text in Oswald.</p>
+    <p class="font-sample raleway">This is a sample text in Raleway.</p>
+    <p class="font-sample merriweather">This is a sample text in Merriweather.</p>
+    <p class="font-sample ubuntu">This is a sample text in Ubuntu.</p>
+    <p class="font-sample dancing-script">This is a sample text in Dancing Script.</p>
+    <p class="font-sample pacifico">This is a sample text in Pacifico.</p>
+    <p class="font-sample nunito">This is a sample text in Nunito.</p>
+    <p class="font-sample poppins">This is a sample text in Poppins.</p>
+    <p class="font-sample roboto-condensed">This is a sample text in Roboto Condensed.</p>
+    <p class="font-sample roboto-slab">This is a sample text in Roboto Slab.</p>
+    <p class="font-sample playfair-display">This is a sample text in Playfair Display.</p>
+    <p class="font-sample inconsolata">This is a sample text in Inconsolata.</p>
+    <p class="font-sample pt-sans">This is a sample text in PT Sans.</p>
+    <p class="font-sample fira-sans">This is a sample text in Fira Sans.</p>
+    <p class="font-sample rubik">This is a sample text in Rubik.</p>
+    <p class="font-sample slabo">This is a sample text in Slabo 27px.</p>
+    <p class="font-sample zilla-slab">This is a sample text in Zilla Slab.</p>
+    <p class="font-sample source-sans-pro">This is a sample text in Source Sans Pro.</p>
+    <p class="font-sample acme">This is a sample text in Acme.</p>
+    <p class="font-sample alegreya">This is a sample text in Alegreya.</p>
+    <p class="font-sample amatic-sc">This is a sample text in Amatic SC.</p>
+    <p class="font-sample archivo-narrow">This is a sample text in Archivo Narrow.</p>
+    <p class="font-sample bebas-neue">This is a sample text in Bebas Neue.</p>
+    <p class="font-sample cabin">This is a sample text in Cabin.</p>
+    <p class="font-sample comfortaa">This is a sample text in Comfortaa.</p>
+    <p class="font-sample courgette">This is a sample text in Courgette.</p>
+    <p class="font-sample crimson-text">This is a sample text in Crimson Text.</p>
+    <p class="font-sample domine">This is a sample text in Domine.</p>
+    <p class="font-sample eb-garamond">This is a sample text in EB Garamond.</p>
+    <p class="font-sample fjalla-one">This is a sample text in Fjalla One.</p>
+    <p class="font-sample great-vibes">This is a sample text in Great Vibes.</p>
+    <p class="font-sample indie-flower">This is a sample text in Indie Flower.</p>
+    <p class="font-sample josefin-sans">This is a sample text in Josefin Sans.</p>
+    <p class="font-sample karla">This is a sample text in Karla.</p>
+    <p class="font-sample libre-baskerville">This is a sample text in Libre Baskerville.</p>
+    <p class="font-sample lobster">This is a sample text in Lobster.</p>
+    <p class="font-sample mukta">This is a sample text in Mukta.</p>
+    <p class="font-sample noto-serif">This is a sample text in Noto Serif.</p>
+    <p class="font-sample old-standard-tt">This is a sample text in Old Standard TT.</p>
+    <p class="font-sample oxygen">This is a sample text in Oxygen.</p>
+    <p class="font-sample play">This is a sample text in Play.</p>
+    <p class="font-sample quicksand">This is a sample text in Quicksand.</p>
+    <p class="font-sample righteous">This is a sample text in Righteous.</p>
+    <p class="font-sample roboto-mono">This is a sample text in Roboto Mono.</p>
+    <p class="font-sample spectral">This is a sample text in Spectral.</p>
+    <p class="font-sample teko">This is a sample text in Teko.</p>
+    <p class="font-sample titillium-web">This is a sample text in Titillium Web.</p>
+    <p class="font-sample ubuntu-mono">This is a sample text in Ubuntu Mono.</p>
+    <p class="font-sample vollkorn">This is a sample text in Vollkorn.</p>
+    <p class="font-sample work-sans">This is a sample text in Work Sans.</p>
+    <p class="font-sample yeseva-one">This is a sample text in Yeseva One.</p>
+    <p class="font-sample zeyada">This is a sample text in Zeyada.</p>
+    <p class="font-sample alice">This is a sample text in Alice.</p>
+    <p class="font-sample alike">This is a sample text in Alike.</p>
+    <p class="font-sample amarante">This is a sample text in Amarante.</p>
+    <p class="font-sample arvo">This is a sample text in Arvo.</p>
+    <p class="font-sample arya">This is a sample text in Arya.</p>
+    <p class="font-sample aubrey">This is a sample text in Aubrey.</p>
+    <p class="font-sample baloo">This is a sample text in Baloo.</p>
+    <p class="font-sample bitter">This is a sample text in Bitter.</p>
+    <p class="font-sample cabin-sketch">This is a sample text in Cabin Sketch.</p>
+    <p class="font-sample cantata-one">This is a sample text in Cantata One.</p>
+    <p class="font-sample cormorant-garamond">This is a sample text in Cormorant Garamond.</p>
+    <p class="font-sample dosis">This is a sample text in Dosis.</p>
+    <p class="font-sample economica">This is a sample text in Economica.</p>
+    <p class="font-sample exo">This is a sample text in Exo.</p>
+    <p class="font-sample fanwood-text">This is a sample text in Fanwood Text.</p>
+    <p class="font-sample fredericka-the-great">This is a sample text in Fredericka the Great.</p>
+    <p class="font-sample grand-hotel">This is a sample text in Grand Hotel.</p>
+    <p class="font-sample italiana">This is a sample text in Italiana.</p>
+    <p class="font-sample julius-sans-one">This is a sample text in Julius Sans One.</p>
+    <p class="font-sample kaushan-script">This is a sample text in Kaushan Script.</p>
+    <p class="font-sample lobster-two">This is a sample text in Lobster Two.</p>
+    <p class="font-sample marck-script">This is a sample text in Marck Script.</p>
+    <p class="font-sample megrim">This is a sample text in Megrim.</p>
+    <p class="font-sample merriweather-sans">This is a sample text in Merriweather Sans.</p>
+    <p class="font-sample milonga">This is a sample text in Milonga.</p>
+    <p class="font-sample monoton">This is a sample text in Monoton.</p>
+    <p class="font-sample neucha">This is a sample text in Neucha.</p>
+    <p class="font-sample neuton">This is a sample text in Neuton.</p>
+    <p class="font-sample nixie-one">This is a sample text in Nixie One.</p>
+    <p class="font-sample orbitron">This is a sample text in Orbitron.</p>
+    <p class="font-sample overlock">This is a sample text in Overlock.</p>
+    <p class="font-sample patrick-hand">This is a sample text in Patrick Hand.</p>
+    <p class="font-sample philosopher">This is a sample text in Philosopher.</p>
+    <p class="font-sample pragati-narrow">This is a sample text in Pragati Narrow.</p>
+    <p class="font-sample press-start-2p">This is a sample text in Press Start 2P.</p>
+    <p class="font-sample ramabhadra">This is a sample text in Ramabhadra.</p>
+    <p class="font-sample ravi-prakash">This is a sample text in Ravi Prakash.</p>
+    <p class="font-sample reenie-beanie">This is a sample text in Reenie Beanie.</p>
+    <p class="font-sample roboto-flex">This is a sample text in Roboto Flex.</p>
+    <p class="font-sample russo-one">This is a sample text in Russo One.</p>
+    <p class="font-sample satisfy">This is a sample text in Satisfy.</p>
+    <p class="font-sample secular-one">This is a sample text in Secular One.</p>
+    <p class="font-sample shadows-into-light">This is a sample text in Shadows Into Light.</p>
+    <p class="font-sample signika">This is a sample text in Signika.</p>
+    <p class="font-sample spinnaker">This is a sample text in Spinnaker.</p>
+    <p class="font-sample syncopate">This is a sample text in Syncopate.</p>
+    <p class="font-sample tangerine">This is a sample text in Tangerine.</p>
+    <p class="font-sample tillana">This is a sample text in Tillana.</p>
+    <p class="font-sample tinos">This is a sample text in Tinos.</p>
+    <p class="font-sample unica-one">This is a sample text in Unica One.</p>
+    <p class="font-sample varela-round">This is a sample text in Varela Round.</p>
+    <p class="font-sample viga">This is a sample text in Viga.</p>
+    <p class="font-sample yatra-one">This is a sample text in Yatra One.</p>
+    <p class="font-sample zilla-slab-highlight">This is a sample text in Zilla Slab Highlight.</p>
+</body>
+</html>

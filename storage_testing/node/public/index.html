@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index Page</title>
+  <script>
+    function displayCookies() {
+      const cookies = document.cookie;
+      document.getElementById('cookies').textContent = cookies;
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === '1') {
+        window.location.href = '/info';
+      }
+      if (event.key === '2') {
+        window.location.href = '/test';
+      }
+      if (event.key === 'Escape') {
+        window.close();
+      }
+    });
+    // Display cookies on page load
+    window.onload = displayCookies;
+  </script>
+</head>
+<body>
+  <h1>Index Page</h1>
+  <p>Press 1 to info</p>
+  <p>Press 2 to test</p>
+  <p>Press Escape to close the window.</p>
+  <p><strong>Cookies:</strong></p>
+  <pre id="cookies"></pre>
+</body>
+</html>

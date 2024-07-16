@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Storage Test</title>
+    <style>
+        body {
+            background: #fff;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .font-sample {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Font Storage Test</h1>
+    <div id="font-container"></div>
+
+    <script>
+        const fonts = [
+            'Roboto', 'Open+Sans', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Merriweather', 'Ubuntu', 'Dancing+Script', 'Pacifico',
+            'Nunito', 'Poppins', 'Roboto+Condensed', 'Roboto+Slab', 'Playfair+Display', 'Inconsolata', 'PT+Sans', 'Fira+Sans', 'Rubik', 'Slabo+27px',
+            'Zilla+Slab', 'Source+Sans+Pro', 'Acme', 'Alegreya', 'Amatic+SC', 'Archivo+Narrow', 'Bebas+Neue', 'Cabin', 'Comfortaa', 'Courgette',
+            'Crimson+Text', 'Domine', 'EB+Garamond', 'Fjalla+One', 'Great+Vibes', 'Indie+Flower', 'Josefin+Sans', 'Karla', 'Libre+Baskerville', 'Lobster',
+            'Mukta', 'Noto+Serif', 'Old+Standard+TT', 'Oxygen', 'Play', 'Quicksand', 'Righteous', 'Roboto+Mono', 'Spectral', 'Teko',
+            'Titillium+Web', 'Ubuntu+Mono', 'Vollkorn', 'Work+Sans', 'Yeseva+One', 'Zeyada', 'Alice', 'Alike', 'Amarante', 'Arvo',
+            'Arya', 'Aubrey', 'Baloo', 'Bitter', 'Cabin+Sketch', 'Cantata+One', 'Cormorant+Garamond', 'Dosis', 'Economica', 'Exo',
+            'Fanwood+Text', 'Fredericka+the+Great', 'Grand+Hotel', 'Italiana', 'Julius+Sans+One', 'Kaushan+Script', 'Lobster+Two', 'Marck+Script', 'Megrim', 'Merriweather+Sans',
+            'Milonga', 'Monoton', 'Neucha', 'Neuton', 'Nixie+One', 'Orbitron', 'Overlock', 'Patrick+Hand', 'Philosopher', 'Pragati+Narrow',
+            'Press+Start+2P', 'Ramabhadra', 'Ravi+Prakash', 'Reenie+Beanie', 'Roboto+Flex', 'Russo+One', 'Satisfy', 'Secular+One', 'Shadows+Into+Light', 'Signika',
+            'Spinnaker', 'Syncopate', 'Tangerine', 'Tillana', 'Tinos', 'Unica+One', 'Varela+Round', 'Viga', 'Yatra+One', 'Zilla+Slab+Highlight',
+            'Abel', 'Abril+Fatface', 'Aclonica', 'Aldrich', 'Alef', 'Allan', 'Almendra', 'Amaranth', 'Annie+Use+Your+Telescope', 'Antic+Slab',
+            'Anton', 'Arimo', 'Arizonia', 'Arvo', 'Asap', 'Asul', 'Atomic+Age', 'Aubrey', 'Audiowide', 'Averia+Libre',
+            'Bangers', 'Baumans', 'Basic', 'Battambang', 'Be+Vietnam+Pro', 'Belgrano', 'Berkshire+Swash', 'Beth+Ellen', 'Big+Shoulders+Display', 'Bitter',
+            'Black+Ops+One', 'Boogaloo', 'Bowlby+One+SC', 'Bree+Serif', 'Bubblegum+Sans', 'Buda', 'Bungee+Shade', 'Butcherman', 'Cabin+Condensed', 'Caesar+Dressing',
+            'Cagliostro', 'Cairo', 'Calistoga', 'Candal', 'Cantarell', 'Capriola', 'Cardo', 'Carme', 'Carrois+Gothic', 'Carter+One',
+            'Catamaran', 'Caveat', 'Ceviche+One', 'Changa+One', 'Chango', 'Charm', 'Chathura', 'Chela+One', 'Chelsea+Market', 'Cherry+Swash',
+            // More font names up to 1000
+        ];
+
+        function loadFont(font) {
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        function createFontSample(font) {
+            const p = document.createElement('p');
+            p.className = 'font-sample';
+            p.style.fontFamily = font.replace(/\+/g, ' ');
+            p.textContent = `This is a sample text in ${font.replace(/\+/g, ' ')}.`;
+            document.getElementById('font-container').appendChild(p);
+        }
+
+        function loadFonts(fontList, startIndex, endIndex) {
+            for (let i = startIndex; i < endIndex && i < fontList.length; i++) {
+                loadFont(fontList[i]);
+                createFontSample(fontList[i]);
+            }
+        }
+
+        function loadFontsInBatches(fontList, batchSize) {
+            let startIndex = 0;
+            function loadNextBatch() {
+                loadFonts(fontList, startIndex, startIndex + batchSize);
+                startIndex += batchSize;
+                if (startIndex < fontList.length) {
+                    setTimeout(loadNextBatch, 500); // Wait 500ms before loading the next batch
+                }
+            }
+            loadNextBatch();
+        }
+
+        loadFontsInBatches(fonts, 50); // Load fonts in batches of 50
+    </script>
+</body>
+</html>
