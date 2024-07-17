@@ -26,14 +26,6 @@
 
 <script>
 
-// // Function to dispatch events
-// function dispatchEvent(eventName) {
-//   console.log('Dispatched event:', eventName);
-//   var event = new Event(eventName);
-//   event.synthetic = true; // Mark the event as synthetic
-//   window.dispatchEvent(event);
-// }
-
 function handleDefaultWindowEvent(event) {
   // Suppress the default behavior of the window blur event
   console.log(`${formatTimestamp()} Default Window Event: ${event.type}`);
