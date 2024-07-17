@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Style Layout</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Shaka Player Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.0.2/controls.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.4.2/shaka-player.compiled.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Lazy Load Tester</h1>
+    </header>
+    <main id="main-content">
+    </main>
+    <div id="counter" class="counter">
+        Loaded Images: 0<br>
+        Memory Usage: 0 KB
+    </div>
+    <!-- Floating Video Player -->
+    <div id="video-container" class="video-container">
+        <video id="video" class="video" controls autoplay></video>
+        <button id="close-video" class="close-button">✕</button>
+    </div>
+    
+</body>
+</html>

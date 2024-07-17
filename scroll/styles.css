@@ -1,0 +1,121 @@
+/* styles.css */
+
+/* Existing styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #141414;
+    color: #fff;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-y: hidden; /* Prevent vertical overflow */
+}
+
+header {
+    background-color: #e50914;
+    padding: 20px;
+    text-align: center;
+    position: fixed; /* Fix the header at the top */
+    width: 100%;
+    top: 0;
+    z-index: 1000; /* Ensure header is above other content */
+}
+
+main {
+    padding: 80px 20px 20px 20px; /* Add top padding to avoid overlap with header */
+    height: calc(100vh - 100px); /* Ensure that main content area fits within viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: relative; /* Ensure scrolling container */
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+.row__posters {
+    display: flex;
+    overflow-x: auto;
+    padding: 20px;
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.row__posters::-webkit-scrollbar {
+    display: none;
+}
+
+.poster {
+    width: 200px;
+    margin-right: 10px;
+    transition: transform 450ms, box-shadow 0.3s ease; /* Added transition for box-shadow */
+    outline: none; /* Remove default focus outline */
+}
+
+.poster:focus {
+    transform: scale(1.08);
+    border: 2px solid #fff; /* Highlight focused item */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Add a glow effect */
+}
+
+h2 {
+    margin: 0 0 10px 20px;
+}
+
+.counter {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+}
+
+/* Floating Video Player */
+.video-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80%;
+    max-width: 960px;
+    height: 60%;
+    max-height: 540px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    border-radius: 8px; /* Add border radius */
+}
+
+.video {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px; /* Ensure the video also has rounded corners */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.8); /* Make the close button red */
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow to the button */
+}
+
+.close-button:hover {
+    background: rgba(255, 0, 0, 1); /* Darker red on hover */
+}
+
+/* Ensure the focus state for poster */
+.poster:focus {
+    outline: none; /* Remove default focus outline */
+    border: 2px solid #fff; /* Highlight focused item */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Add a glow effect */
+}

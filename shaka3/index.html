@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://soip.staging.si.producthub.sky/shaka-player-git/dist/controls.css" />
+    <link rel="stylesheet" href="mystyle.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://soip.staging.si.producthub.sky/shaka-player-git/dist/shaka-player.compiled.debug.js"></script>  
+    <script src="myapp.js"></script>    
+  </head>
+  <body>
+    <div >
+      <video id="video" class="focusable" 
+           poster="http://shaka-player-demo.appspot.com/assets/poster.jpg"
+           controls data-shaka-player autoplay
+           style="width: 1920px; height: 1080px;">
+      </video>
+    </div>
+
+      <!-- Over layer -->
+    <div id="overlay" class="text-block">
+        <pre id="taPlayingStatus" class="taPlayingStatus"> Playing status </pre>
+          <!-- Stats for nerds -->
+        <pre id="taStats" class="taStats">Stats for nerds</pre>
+
+        <!-- Events block -->
+        <div class="log_wrap">
+          <div id="log" class="log"></div>
+        </div>        
+        <div class="log_wrap2">
+          <div id="debugDiv" class="log2"></div>
+        </div>
+    </div>
+    
+   
+  </body>
+</html>
