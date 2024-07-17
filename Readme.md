@@ -1,6 +1,8 @@
 HTML Integration Experimentation
 
 This repository contains a collection of HTML integration experiments, each housed within its own directory. These experiments explore various web technologies and APIs, including WebGL, Media Source Extensions (MSE), QR code generation, and more.
+They are mainly used to investigate the capabilities of embedded devices with browser using remote controllers.
+
 Directory Structure
 
 Here is a brief overview of the files and directories included in this repository:
@@ -52,10 +54,4 @@ Here is a brief overview of the files and directories included in this repositor
 Getting Started
 
 To explore these experiments, simply clone the repository and open the respective HTML files in your preferred web browser.
-
-git clone https://github.com/yourusername/html-integration-experimentation.git
-cd html-integration-experimentation
-
-Contributions
-
-Contributions are welcome! If you have any ideas for new experiments or improvements to existing ones, feel free to open an issue or submit a pull request.
+You would probably need a HTML server like caddy or apache, but anything serving basic files should do.
